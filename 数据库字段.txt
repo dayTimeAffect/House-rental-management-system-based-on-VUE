@@ -1,0 +1,46 @@
+连接名：houseRent
+库名：house_rent
+	表名：房屋信息(house)
+库名：usertab
+	表名：房东管理用户(manage)
+	表名：普通用户(tenement)
+
+house:
+房屋唯一标识id：id
+房屋宣传语：title
+房屋所在区县：location_county
+房屋所在街道：location_street
+出租类型：rentType
+房屋类型：houseType
+房屋面积：houseArea
+房屋装修或主题：houseTheme
+房屋价格：price
+联系人姓名：linkman_name
+联系人账号：linkman_user
+联系人电话：linkman_phone
+发布信息的日期：publish_time
+备注：remark
+
+manage:
+用户唯一标识id：id
+账号：user
+密码：password
+姓名：name
+性别：sex
+年龄：age
+邮箱：email
+电话：phone
+是否为管理账号：manage
+头像地址：path
+
+tenement:
+用户唯一标识id：id
+账号：user
+密码：password
+姓名：name
+性别：sex
+年龄：age
+邮箱：email
+电话：phone
+是否为管理账号：manage
+头像地址：path
