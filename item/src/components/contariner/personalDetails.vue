@@ -16,7 +16,7 @@
             <img src="" alt="" style="width: 150px;height: 200px;" id="userHeaderImg">
             <img src="../../assets/3.jpg" style="width: 150px;height: 200px;" alt="" v-if="noneImg">
           </div>
-            <p><span>修改头像</span></p>
+            <p style="text-align: center;padding-top: 10px;font-size: 14px"><span style="color: #338af9;cursor: pointer">修改头像</span></p>
         </div>
         <div class="clear"></div>
       </div>

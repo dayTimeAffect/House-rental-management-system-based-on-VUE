@@ -1,6 +1,5 @@
 var mysql = require('mysql');
 exports.examine = function (require,response,next) {
-    console.log(require.body);
     var poll = mysql.createPool({
         host:'localhost', //链接地址
         'port':'3306', //接口， 3306为默认接口

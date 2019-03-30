@@ -1,7 +1,6 @@
 var mysql = require('mysql');
 const fs = require('fs');
 exports.login = function (require,response,next) {
-    console.log(Boolean(require.body['path']));
     if (String(require.body['path']) != 'null' && String(require.body['path']) != 'undefined'){
         fs.readFile(require.body['path'],function (err,data) {
             if (err) console.log(err);
