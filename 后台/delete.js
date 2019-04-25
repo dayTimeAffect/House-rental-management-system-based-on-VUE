@@ -1,6 +1,5 @@
 var mysql = require('mysql');
 exports.delete = function (require,response,next) {
-    console.log(require.body);
     var poll = mysql.createPool({
         host:'localhost', //链接地址
         'port':'3306', //接口， 3306为默认接口
@@ -17,7 +16,7 @@ exports.delete = function (require,response,next) {
                     connection.query("DELETE FROM `house` WHERE id = '"+val.id+"'", function (err, data) {
                         if (err) {
                             console.log(err);
-                            response("撤销失败")
+                            response.send("撤销失败")
                         } else {
                             console.log(data);
                         }

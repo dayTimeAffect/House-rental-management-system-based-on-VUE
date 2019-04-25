@@ -8,6 +8,10 @@ var register = require('./register') // 注册接口模块
 var examine = require('./examine') // 信息查阅接口模块
 var Delete = require('./delete') // 信息删除接口模块
 var release = require('./release') // 信息发布接口模块
+var changeInfo = require('./changeInfo') // 个人信息修改接口模块
+var bookHouse = require('./bookHouse') // 预订房屋接口
+var switchoverRentState = require('./switchoverRentState') // 切换房屋状态接口
+var rentMange = require('./rentMange') // 租赁管理接口
 /*
 * 监听接口
 * */
@@ -63,4 +67,32 @@ server.post('/delete',function (require,response,next) {
 * */
 server.post('/release',function (require,response,next) {
     release.release(require,response,next)
+})
+
+/*
+* 个人信息修改
+* */
+server.post('/changeInfo',function (require,response,next) {
+    changeInfo.changeInfo(require,response,next)
+})
+
+/*
+*预订房屋
+* */
+server.post('/bookHouse',function (require,response,next) {
+    bookHouse.bookHouse(require,response,next)
+})
+
+/*
+* 修改房屋状态
+* */
+server.post('/switchoverRentState',function (require,response,next) {
+    switchoverRentState.switchoverRentState(require,response,next)
+})
+
+/*
+* 租赁管理
+* */
+server.post('/rentMange',function (require,response,next) {
+    rentMange.rentMange(require,response,next)
 })

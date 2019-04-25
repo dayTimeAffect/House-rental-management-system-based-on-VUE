@@ -1,9 +1,9 @@
 <template>
     <div class="contarinerLeft">
       <ul class="tree">
-        <router-link to="/manageMain/examine" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 1}" v-on:click.native="change_node(1)">已发布的房屋信息</router-link>
+        <router-link to="/manageMain/examine" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 1}" v-on:click.native="change_node(1)">房屋信息管理</router-link>
         <router-link to="/manageMain/personalDetails" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 2}" v-on:click.native="change_node(2)">个人信息</router-link>
-        <router-link to="/manageMain/rentSituation" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 3}" v-on:click.native="change_node(3)">房屋租赁消息</router-link>
+        <router-link to="/manageMain/rentSituation" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 3}" v-on:click.native="change_node(3)">房屋租赁管理</router-link>
         <router-link to="/manageMain/contract" tag="li" class="tree_node" v-bind:class="{tree_node1:node_change == 4}" v-on:click.native="change_node(4)">房屋租赁合同</router-link>
       </ul>
     </div>

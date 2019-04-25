@@ -82,8 +82,12 @@
                 alert('账号或密码错误！')
                 this.password = "";
               } else {
+                if (response.data.manage == true || response.data.manage == 'true'){
+                  this.$store.state.reserved = "false"
+                } else {
+                  this.$store.state.reserved = "true"
+                }
                 this.$store.state.user = response.data;
-
                 alert('登录成功')
 
                 this.$store.commit('emptyLocalStorage')

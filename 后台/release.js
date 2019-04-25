@@ -14,9 +14,10 @@ exports.release = function (require,response,next) {
     poll.getConnection(function (err,connection) {
         if (err) console.log(err);
         else {
-            connection.query("INSERT INTO `house` (`title`, `rentType`, `houseType`, `houseTheme`, `location_county`, `location_street`, `price`, `linkman_name`, `linkman_user`, `linkman_phone`, `publish_time`, `remark`, `houseArea`) VALUES ('" + require.body.title + "','" + require.body.rentType + "','" + require.body.houseType + "','" + require.body.houseTheme + "','" + require.body.location_county + "','" + require.body.location_street + "','" + require.body.price + "','" + require.body.linkman_name + "','" + require.body.linkman_user + "','" + require.body.linkman_phone + "','" + require.body.publish_time + "','" + require.body.remark + "','" + require.body.houseArea + "');", function (err, data) {
+            connection.query("INSERT INTO `house` (`title`, `rentType`, `houseType`, `houseTheme`, `location_county`, `location_street`, `price`, `linkman_name`, `linkman_user`, `linkman_phone`, `publish_time`, `remark`, `houseArea`, `occupancy`) VALUES ('" + require.body.title + "','" + require.body.rentType + "','" + require.body.houseType + "','" + require.body.houseTheme + "','" + require.body.location_county + "','" + require.body.location_street + "','" + require.body.price + "','" + require.body.linkman_name + "','" + require.body.linkman_user + "','" + require.body.linkman_phone + "','" + require.body.publish_time + "','" + require.body.remark + "','" + require.body.houseArea + "','" + require.body.occupancy + "');", function (err, data) {
                 if (err) {
                     console.log(err);
+                    response.send('发布失败');
                 } else {
                     if (data.affectedRows > 0) {
                         response.send('发布成功');

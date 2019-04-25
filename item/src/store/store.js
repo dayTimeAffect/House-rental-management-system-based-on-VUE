@@ -6,6 +6,8 @@ const store = new Vuex.Store({
   state:{
     user:{},
     img:"",
+    rentInfo:{},
+    reserved:false
   },
   mutations:{
     UseLocalStorage:state => {
@@ -16,7 +18,7 @@ const store = new Vuex.Store({
         for(let key in state.user){
           storage.setItem(key,state.user[key])
         }
-
+        storage.setItem("reserved",state.reserved)
       }
     },
     recoverState:state => {
@@ -25,6 +27,7 @@ const store = new Vuex.Store({
       key.forEach((value)=>{
         state.user[value] = storage[value]
       })
+      state["reserved"] = storage["reserved"]
     },
     emptyLocalStorage:state => {
       let storage=window.sessionStorage;

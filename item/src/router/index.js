@@ -43,7 +43,14 @@ const router = new Router({
         },
         {
           path: '/manageMain/contract',
-          component: contract
+          component: contract,
+          beforeEnter:(to, from, next)=>{
+            if(window.sessionStorage.manage == 'false'){
+              next('/manageMain/examine')
+            }else{
+              next()
+            }
+          },
         },
         {
           path: '/manageMain/examine',
@@ -51,7 +58,14 @@ const router = new Router({
         },
         {
           path: '/manageMain/rentSituation',
-          component: rentSituation
+          component: rentSituation,
+/*          beforeEnter:(to, from, next)=>{
+            if(window.sessionStorage.manage == 'false'){
+              next('/manageMain/examine')
+            }else{
+              next()
+            }
+          },*/
         },
         {
           path: '/manageMain/personalDetails',
@@ -66,18 +80,7 @@ const router = new Router({
 
 router.beforeEach((to,from,next)=>{
   if(window.sessionStorage.id > 0){
-    next(vm => {
-      if(this.$store.state.user.id > 0){
-        next();
-      }else {
-        if(to.path == '/login' || to.path == '/login/register' || to.path == '/login/login'){
-          next()
-        }else {
-          alert('还未登录或登录已失效，请重新登录')
-          next('/login')
-        }
-      }
-    })
+    next()
   }else {
     if(to.path == '/login' || to.path == '/login/register' || to.path == '/login/login'){
       next()

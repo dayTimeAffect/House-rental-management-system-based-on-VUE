@@ -2,16 +2,60 @@
     <div id="examine">
 
         <div class="header_title">
+          <span>
+            <select name="" id="occupancy" ref="IsOccupancy" v-on:change="switchoverInfo" v-model="IsOccupancy" v-if="user.manage == 'true'">
+              <option value="1" selected>未出租</option>
+              <option value="2">已出租</option>
+            </select>
+          </span>
         <span class="search">
           <span v-on:click="search"><i class="fa fa-search"></i></span>
-          <input type="text" placeholder="根据出租类型检索" ref="search_input" v-on:blur="search" v-on:keyup.enter="search">
+          <input type="text" placeholder="根据出租类型检索" ref="search_input1" v-on:blur="search" v-on:keyup.enter="search">
         </span>
           <!--按钮-->
-          <div class="btn">
+          <div class="btn" v-if="user.manage == 'true'">
             <div class="revocation" style=" background-position: -20px -20px;" title="添加发布" v-on:click="switchoverDatePage"></div>
-            <div class="revocation" v-on:click="revocation" title="撤销发布"></div>
+            <div class="revocation" v-on:click="revocation" title="撤销发布" v-if="IsOccupancy == '1'"></div>
             <div class="refresh" v-on:click="reload" title="刷新"></div>
             <div class="export" title="导出" v-on:click="exportFile"></div>
+          </div>
+          <div v-else>
+            <span class="search1">
+              <span v-on:click="search"><i class="fa fa-search"></i></span>
+              <input type="text" placeholder="根据房屋地址检索" ref="search_input2" v-on:blur="search" v-on:keyup.enter="search">
+            </span>
+            <span class="search2">
+              面积：
+              <!--<span v-on:click="search"><i class="fa fa-search"></i></span>-->
+              <!--<input type="text" placeholder="根据出租面积检索" ref="search_input3" v-on:blur="search" v-on:keyup.enter="search">-->
+              <select name="" id="searchHouseArea" ref="search_input3" v-on:blur="search" v-on:keyup.enter="search">
+                <option value="false" selected>全部</option>
+                <option value="1">10m²</option>
+                <option value="2">10-20m²</option>
+                <option value="3">20-30m²</option>
+                <option value="4">30-40m²</option>
+                <option value="5">40-50m²</option>
+                <option value="6">50-100m²</option>
+                <option value="7">100-200m²</option>
+                <option value="8">200m²以上</option>
+              </select>
+            </span>
+            <span class="search3">
+              价格：
+              <!--<span v-on:click="search"><i class="fa fa-search"></i></span>-->
+              <!--<input type="text" placeholder="根据租赁检索" ref="search_input4" v-on:blur="search" v-on:keyup.enter="search">-->
+              <select name="" id="searchPrice" ref="search_input4" v-on:blur="search" v-on:keyup.enter="search">
+                <option value="false" selected>全部</option>
+                <option value="1">500元以下</option>
+                <option value="2">500-1000元</option>
+                <option value="3">1000-1500元</option>
+                <option value="4">1500-2000元</option>
+                <option value="5">2000-3000元</option>
+                <option value="6">3000-4000元</option>
+                <option value="7">4000-6000元</option>
+                <option value="8">6000元以上</option>
+              </select>
+            </span>
           </div>
 
         </div>
@@ -27,7 +71,17 @@
               <td class="price">房屋租赁价格</td>
               <td class="more">操作</td>
             </tr>
-            <tr v-if="nodata.is" v-for="(info,index) in infos[pn]" class="gery_bg" >
+            <tr v-if="nodata.is[1] && IsOccupancy == '1' " v-for="(info,index) in infos[pn]" class="gery_bg" >
+              <td class="choose">{{index+1}}<span>. </span><input type="checkbox" ref="checkboxs" name="info"></td>
+              <td class="title" :title="info.title">{{info.title}}</td>
+              <td class="rentType" :title="info.rentType">{{info.rentType}}</td>
+              <td class="houseArea" :title="info.houseArea">{{info.houseArea}}</td>
+              <td class="location" :title="info.location_county + info.location_street">{{info.location_county}}{{info.location_street}}</td>
+              <td class="houseTheme" :title="info.houseTheme">{{info.houseTheme}}</td>
+              <td class="price" :title="info.price">{{info.price}}元/月</td>
+              <td class="more"><span v-on:click="detailsSwitch(info)">详情</span></td>
+            </tr>
+            <tr v-if="nodata.is[2] && IsOccupancy == '2'" v-for="(info,index) in infos[pn]" class="gery_bg" >
               <td class="choose">{{index+1}}<span>. </span><input type="checkbox" ref="checkboxs" name="info"></td>
               <td class="title" :title="info.title">{{info.title}}</td>
               <td class="rentType" :title="info.rentType">{{info.rentType}}</td>
@@ -39,21 +93,22 @@
             </tr>
 
           </table>
-          <p v-if="!nodata.is" style="text-align: center">{{nodata.data}}</p>
+          <p v-if="!nodata.is[1] && IsOccupancy == '1' " style="text-align: center">{{nodata.data}}</p>
+          <p v-else-if="!nodata.is[2] && IsOccupancy == '2'" style="text-align: center">{{nodata.data}}</p>
         </div>
         <div class="footer">
           <div class="paging">
             <span v-on:click="set_pn(1)">首页</span>
             <span class="angle-left" v-on:click="minusPn"><i class="fa fa-angle-left"></i></span>
             第&nbsp;
-            <input type="text" ref="pag" v-on:blur="input_pag" value="1" v-on:focus="input_mr_pag" v-on:keyup.enter="input_pag">
+            <input type="text" v-on:blur="input_pag" value="1" v-on:keyup.enter="input_pag" v-model="mr">
             页 /共&nbsp;{{maxPn}}&nbsp;页
             <span class="angle-right" v-on:click="addPn"><i class="fa fa-angle-right"></i></span>
             <span v-on:click="set_pn(maxPn)">尾页</span>
           </div>
         </div>
 
-      <!--详情-->
+      <!--用户管理界面的详情-->
       <div class="details" v-if="isDetails">
         <div class="detailsTop">
           <span>详情</span>
@@ -62,7 +117,7 @@
         <div class="detailsContariner">
 
 
-
+          <p><span>房屋唯一id：</span><span>{{detailsDate.id}}</span></p>
           <p><span>宣传标题：</span><span>{{detailsDate.title}}</span></p>
           <p><span>出租类型：</span><span>{{detailsDate.rentType}}</span></p>
           <p><span>房屋类型：</span><span>{{detailsDate.houseType}}</span></p>
@@ -75,14 +130,19 @@
           <p><span>发布人姓名：</span><span>{{detailsDate.linkman_name}}</span></p>
           <p><span>发布人账号：</span><span>{{detailsDate.linkman_user}}</span></p>
           <p><span>发布人电话：</span><span>{{detailsDate.linkman_phone}}</span></p>
-          <p><span>发布时间：</span><span>{{detailsDate.publish_time}}</span></p>
+          <p><span>发布时间：</span><span>{{timeDispose(detailsDate.publish_time)}}</span></p>
           <p><span>备注：</span><span>{{detailsDate.remark}}</span></p>
 
 
 
         </div>
         <div class="detailsFooter">
-          <p class="detailsBtn"><button v-on:click="detailsSwitch">关闭</button></p>
+          <p class="detailsBtn">
+            <button v-on:click="detailsSwitch">关闭</button>
+            <button v-on:click="book" v-if="user.manage != 'true'">预订</button>
+            <button v-else-if="IsOccupancy == '1'" v-on:click="switchoverRentState(0)">转为已出租</button>
+            <button v-else-if="IsOccupancy == '2'" v-on:click="switchoverRentState(1)">转为未出租</button>
+          </p>
         </div>
 
       </div>
@@ -100,7 +160,7 @@
           <p style="padding: 5px 0px 5px 15px">
             <span class="addHeadline">宣传标题：</span>
             <span><input type="text" v-model="addDates.title" class="inputTetx" v-on:blur="inputBlur(1)"></span>
-            <span v-if="inputBlurHint.inputBlurOne && !hint.vacancy1" style="color: red">* 不超过32个字符</span>
+            <span v-if="inputBlurHint.inputBlurOne && !hint.vacancy1" style="color: red">* 不超过64个字符</span>
             <span v-if="inputBlurHint.inputBlurOne && hint.vacancy1" style="color: red">* 不能为空</span>
           </p>
           <p style="padding: 5px 0px 5px 15px">
@@ -170,15 +230,20 @@
       data(){
         return {
           infos:{},
+          occupancyInfos:[],
+          NoOccupancyInfos:[],
           user:this.$store.state.user,
-          name:this.$store.state.name,
-          manage: this.$store.state.manage,
+          name:this.$store.state.user.name,
+          manage: this.$store.state.user.manage,
           pn:1,
           maxPn:1,
           maxInfo:10,
           mr:1,
           nodata:{
-            is:true,
+            is:{
+              1:true,
+              2:true
+            },
             data:"当前暂无数据"
           },
           isDetails:false,
@@ -197,6 +262,7 @@
             linkman_phone:this.$store.state.user.phone,
             publish_time:"",
             remark:"",
+            occupancy:false
           },
           inputBlurHint :{
             inputBlurOne:false,
@@ -211,18 +277,108 @@
             vacancy2:false,
             vacancy3:false,
           },
-          addDate:false//添加发布信息页面
-
+          addDate:false,//添加发布信息页面
+          IsOccupancy:'1'
 
         }
       },
       methods:{
+        /*
+        * 分别展示已出租与未出租的信息
+        * */
+        switchoverInfo(){
+          if ( this.IsOccupancy == '2'){
+            let pn = Math.ceil(this.NoOccupancyInfos.length / this.maxInfo);
+            this.maxPn = 0;
+            setTimeout(()=>{
+              this.maxPn = pn;
+            },1);
+
+            this.pn = 1;
+            this.mr = 1;
+            for(let i = 1; i <= pn;i++){
+              this.infos[""+i] = this.NoOccupancyInfos.slice(this.maxInfo*(i - 1),this.maxInfo*i)
+            }
+          }else if(this.IsOccupancy == '1'){
+            let pn = Math.ceil(this.occupancyInfos.length / this.maxInfo);
+            this.maxPn = 0;
+            setTimeout(()=>{
+              this.maxPn = pn;
+            },1);
+
+            this.pn = 1;
+            this.mr = 1;
+            for(let i = 1; i <= pn;i++){
+              this.infos[""+i] = this.occupancyInfos.slice(this.maxInfo*(i - 1),this.maxInfo*i)
+            }
+          }
+        },
+        /*
+        * 切换房屋是否已出租的状态
+        * */
+        switchoverRentState(num){
+          this.$http({
+            method:'post',
+            url:'http://localhost:2173/switchoverRentState',
+            data:{
+              houseId:this.detailsDate.id,
+              occupancy:num
+            }
+          }).then((response)=>{
+            if (response.data == '修改成功') {
+              this.isDetails = !this.isDetails;
+              this.get_infos();
+            }
+
+            alert(response.data)
+          })
+        },
+        /*
+        * 预订
+        * */
+        book(){
+          let myDate = new Date(),
+            year = myDate.getFullYear(),
+            month = myDate.getMonth() + 1,
+            strDate = myDate.getDate();
+          if (month >= 1 && month <= 9) {
+            month = "0" + month;
+          }
+          if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+          }
+          let bookTime = `${year}-${month}-${strDate}`;
+          let data = {
+            houseId:this.detailsDate.id,
+            // linkman_name: this.detailsDate.linkman_name,
+            linkman_user:this.detailsDate.linkman_user,
+            // linkman_phone:this.detailsDate.linkman_phone,
+            renter_user: this.user.user,
+            renter_name:this.$store.state.user.name,
+            bookORcheckin:1,
+            renter_phone:this.$store.state.user.phone ? this.$store.state.user.phone : "无",
+            renter_email:this.$store.state.user.email ? this.$store.state.user.email : "无",
+            bookTime:bookTime
+          }
+          this.$http({
+            method:'post',
+            url: 'http://localhost:2173/bookHouse',
+            data:data
+          }).then((response)=>{
+            if (response.data == '预订成功，请等待房东联系') {
+              alert('预订成功，请等待房东联系')
+              this.isDetails = !this.isDetails;
+            }else {
+              alert(response.data)
+            }
+          })
+        },
           /*
           * 分页
           * */
         set_pn(opt){
             this.pn = opt;
-          this.$refs.pag.value = this.pn;
+          this.mr = this.pn;
           this.$refs.checkboxs.forEach(function (value, index, array) {
             let checkbox = value;
             checkbox.checked = false;
@@ -233,7 +389,7 @@
             if(this.pn >= this.maxPn){
               this.pn = this.maxPn;
             }
-          this.$refs.pag.value = this.pn;
+          this.mr= this.pn;
           this.$refs.checkboxs.forEach(function (value, index, array) {
             let checkbox = value;
             checkbox.checked = false;
@@ -244,36 +400,31 @@
           if(this.pn <= 1){
             this.pn = 1;
           }
-          this.$refs.pag.value = this.pn;
+          this.mr = this.pn;
           this.$refs.checkboxs.forEach(function (value, index, array) {
             let checkbox = value;
             checkbox.checked = false;
           })
         },
         input_pag(){
-          if (this.$refs.pag.value > this.maxPn){
+          if (this.mr > this.maxPn){
             this.pn = this.maxPn;
-            this.$refs.pag.value = this.maxPn
-          }else if (this.$refs.pag.value < 1){
+            this.mr = this.maxPn
+          }else if (this.mr < 1){
             this.pn = 1;
-            this.$refs.pag.value = 1
+            this.mr = 1
           } else {
-            if (Boolean(this.$refs.pag.value)){
-              this.pn = Number(this.$refs.pag.value)
+            if (Boolean(this.mr)){
+              this.pn = Number(this.mr)
               this.$refs.checkboxs.forEach(function (value, index, array) {
                 let checkbox = value;
                 checkbox.checked = false;
               })
             } else {
               this.pn = this.mr
-              this.$refs.pag.value =this.mr
             }
           }
 
-
-        },
-        input_mr_pag(){
-          this.mr = Number(this.$refs.pag.value)
         },
         /*
         * 初始数据加载
@@ -289,18 +440,25 @@
             url: 'http://localhost:2173/examine',
             data:data
           }).then((response) =>{
+            this.nodata.is[1] = false
+            this.nodata.is[2] = false
             if (response.data == '暂无数据'){
-              this.nodata.is = false
               this.pn = 1;
               this.maxPn = 1;
             }else {
-              this.nodata.is = true;
               response.data.reverse()
-              let pn = Math.ceil(response.data.length / this.maxInfo);
-              this.maxPn = pn;
-              for(let i = 1; i <= pn;i++){
-                this.infos[""+i] = response.data.slice(this.maxInfo*(i - 1),this.maxInfo*i)
-              }
+              this.occupancyInfos = [];
+              this.NoOccupancyInfos = [];
+              response.data.forEach( (val) => {
+                if (val.occupancy == 'false') {
+                  this.occupancyInfos.push(val)
+                  this.nodata.is[1] = true
+                }else {
+                  this.NoOccupancyInfos.push(val)
+                  this.nodata.is[2] = true
+                }
+              })
+              this.processing();
             }
           })
         },
@@ -308,35 +466,96 @@
         * 搜索
         * */
         search(){
-          let data = {
-            user:""+this.user.user,
-            name: ""+this.user.name,
-            manage:this.user.manage,
-            rentType:""+this.$refs.search_input.value
+          let data;
+          if (this.user.manage == "true"){
+            data = {
+              user:""+this.user.user,
+              name: ""+this.user.name,
+              manage:this.user.manage,
+              rentType:(this.$refs.search_input1.value || false),
+            }
+          } else {
+            data = {
+              user:""+this.user.user,
+              name: ""+this.user.name,
+              manage:this.user.manage,
+              rentType:(this.$refs.search_input1.value || false),
+              location:(this.$refs.search_input2.value || false),
+              houseArea:(this.$refs.search_input3.value == 'false' ? false : this.$refs.search_input3.value),
+              price:(this.$refs.search_input4.value == 'false' ? false : this.$refs.search_input4.value),
+            }
           }
           this.$http({
             method: 'post',
             url: 'http://localhost:2173/examine',
             data:data
           }).then((response) =>{
+            this.nodata.is[1] = false
+            this.nodata.is[2] = false
             if (response.data == '暂无数据'){
-              this.nodata.is = false
               this.pn = 1;
               this.maxPn = 1;
             }else {
-              this.nodata.is = true;
-              let pn = Math.ceil(response.data.length / this.maxInfo);
+              this.occupancyInfos = [];
+              this.NoOccupancyInfos = [];
+              if (this.manage == 'false') this.IsOccupancy = '1'
+              response.data.reverse()
+              response.data.forEach( (val) => {
+                if (val.occupancy == 'false') {
+                  this.occupancyInfos.push(val)
+                  this.nodata.is[1] = true
+                }else {
+                  this.nodata.is[2] = true
+                  this.NoOccupancyInfos.push(val)
+                }
+              })
+              this.processing();
+            }
+          })
+        },
+        /*
+        * 数据分组处理
+        * */
+        processing(){
+          if(this.manage == 'true'){
+            if (this.IsOccupancy == '2'){
+              let pn = Math.ceil(this.NoOccupancyInfos.length / this.maxInfo);
               this.maxPn = 0;
               setTimeout(()=>{
                 this.maxPn = pn;
               },1);
 
+              this.pn = 1;
+              this.mr = 1;
               for(let i = 1; i <= pn;i++){
-                this.infos[""+i] = response.data.slice(this.maxInfo*(i - 1),this.maxInfo*i)
+                this.infos[""+i] = this.NoOccupancyInfos.slice(this.maxInfo*(i - 1),this.maxInfo*i)
               }
+            }else {
+              let pn = Math.ceil(this.occupancyInfos.length / this.maxInfo);
+              this.maxPn = 0;
+              setTimeout(()=>{
+                this.maxPn = pn;
+              },1);
 
+              this.pn = 1;
+              this.mr = 1;
+              for(let i = 1; i <= pn;i++){
+                this.infos[""+i] = this.occupancyInfos.slice(this.maxInfo*(i - 1),this.maxInfo*i)
+              }
             }
-          })
+          }else {
+            let pn = Math.ceil(this.occupancyInfos.length / this.maxInfo);
+            this.maxPn = 0;
+            setTimeout(()=>{
+              this.maxPn = pn;
+            },1);
+
+            this.pn = 1;
+            this.mr = 1;
+            for(let i = 1; i <= pn;i++){
+              this.infos[""+i] = this.occupancyInfos.slice(this.maxInfo*(i - 1),this.maxInfo*i)
+            }
+          }
         },
         /*
         * 刷新
@@ -356,7 +575,6 @@
             if (checkbox.checked) {
               revocationArr.push(this.infos[this.pn][index])
             }
-            // console.log(checkbox.checked,index,this.infos[this.pn][index]);
           });
           if (revocationArr.length > 0){
             let str = window.confirm("你是否要撤销这"+revocationArr.length+"项记录！")
@@ -384,8 +602,6 @@
         detailsSwitch(data){//界面的显示
           this.detailsDate = data;
           this.isDetails = !this.isDetails;
-
-          console.log(this.detailsDate);
         },
 
         /*
@@ -407,7 +623,7 @@
             if (String(titleStrLen) != 'null') {
               titlelen += titleStrLen.length
             }
-            if (titlelen > 32) {
+            if (titlelen > 64) {
               this.inputBlurHint.inputBlurOne = true;
               this.addDates.title = ""
             }else if (titlelen == 0) {
@@ -505,7 +721,7 @@
             houseArea:"房屋面积",
             houseTheme:"房屋装修或主题",
             price:"房屋价格",
-            remark:"备注"
+            remark:"备注",
           }
           for(let key in this.addDates){
             if (this.addDates[key].length == 0){
@@ -535,6 +751,7 @@
                 linkman_phone:this.$store.state.user.phone,
                 publish_time:"",
                 remark:"",
+                occupancy:false
               };//发布信息重新清空
               this.reloadContarinerMain()//刷新
             }else {
@@ -553,6 +770,7 @@
                 linkman_phone:this.$store.state.user.phone,
                 publish_time:"",
                 remark:"",
+                occupancy:false
               };//发布信息重新清空
 
             }
@@ -577,7 +795,7 @@
             location_street:"房屋所在街道",
             price:"出租价格",
             publish_time:"发布时间",
-            remark:"备注"
+            remark:"备注",
           }
           //列标题，逗号隔开，每一个逗号就是隔开一个单元格
           let str = `房屋标题,出租类型,房屋类型,房屋出租面积,房屋装修或主题,房屋所在区县,房屋所在街道,出租价格,发布时间,备注\n`;
@@ -597,7 +815,46 @@
           link.download =  "房屋信息.csv";
           document.body.appendChild(link);
           link.click();
-        }
+        },
+        /*UTC时间处理*/
+        timeDispose(time) {
+          let year = Number(time.slice(0,4)),
+            month = Number(time.slice(5,7)),
+            day = Number(time.slice(8,10));
+          day = 1 + day;
+          let arr = [1,3,5,7,8,10,12],
+            brr = [4,6,9,11];
+          if (arr.indexOf(month)){
+            if (day > 31){
+              month = 1+month;
+              day = 1
+            }
+          }else if(brr.indexOf(month)){
+            if (day > 30){
+              month = 1+month;
+              day = 1
+            }
+          }else {
+            if (day > 28){
+              month = 1+month;
+              day = 1
+            }
+          }
+          if (month > 12){
+            month = 1;
+            year = 1+year
+          }
+          if (month < 10){
+            month = "0"+month
+          }
+          if (day < 10){
+            day = "0"+day
+          }
+          return `${year}-${month}-${day}`
+        },
+      },
+      computed:{
+
       },
       created() {
         this.get_infos()
@@ -620,9 +877,38 @@
 .header_title .search{
   position: absolute;
   right: 210px;
+  z-index: 1;
+}
+#occupancy{
+  height: 36px;
+  width: 175px;
+  padding: 2px 6px;
+  line-height: 24px;
+  border: 1px solid #d7d6d7;
+  border-radius: 4px;
+  color: #333;
+  background: #fff;
+}
+.search1{
+  position: absolute;
+  right: 28%;
+  z-index: 1;
 }
 
-.header_title .search>input{
+.search2{
+  position: absolute;
+  left: 16%;
+  z-index: 1;
+}
+.search3{
+  position: absolute;
+  left: 32%;
+  z-index: 1;
+}
+.header_title .search>input,
+.search1>input,
+.search2>select,
+.search3>select{
   height: 24px;
   width: 175px;
   padding: 2px 6px;
@@ -632,7 +918,9 @@
   color: #555;
   background: #fff;
 }
-.header_title .search>span{
+
+.header_title .search>span,
+.search1>span{
   display: inline-block;
   width: 24px;
   height: 24px;
