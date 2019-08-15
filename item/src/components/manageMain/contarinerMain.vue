@@ -5,11 +5,13 @@
 </template>
 
 <script>
+  //
     export default {
       name: "contarinerMain",
       provide(){
         return {
           reloadContarinerMain:this.reloadContarinerMain
+
         }
       },
 

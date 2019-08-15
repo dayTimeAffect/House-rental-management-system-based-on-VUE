@@ -27,7 +27,4 @@ exports.delete = function (require,response,next) {
             connection.end();
         }
     })
-
-
-
 }

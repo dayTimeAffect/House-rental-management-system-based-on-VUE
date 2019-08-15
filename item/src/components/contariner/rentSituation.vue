@@ -15,7 +15,20 @@
             <span ><i class="fa fa-search"></i></span>
             <input type="text" v-if="this.$store.state.reserved == 'true'" placeholder="根据出租类型检索" v-on:blur="search(2)" v-on:keyup.enter="search(2)" ref="search_input1">
             <input type="text" v-else placeholder="根据房屋ID检索" v-on:blur="search(1)" v-on:keyup.enter="search(1)" ref="search_input1">
+            
+            <p class="mClassify" v-if="this.$store.state.reserved != 'true'">
+              <i v-if="pagState != 3" style="font-size: 16px">按预定时间查询：</i>
+              <i v-else  style="font-size: 16px">按入住时间查询：</i>
+              <input type="month" style="width: 120px" v-model="timeChassify.startTime" v-on:blur="tChassify">
+              -----
+              <input type="month" style="width: 120px" v-model="timeChassify.endTime" v-on:blur="tChassify">
+              <b v-on:click="clearTClassify" style="cursor: pointer;font-size: 16px" >&nbsp;&nbsp;清空查询时间</b>
+            </p>
+
+
           </span>
+<!--          <span class="search1" v-if="user.manage == 'true'">
+          </span>-->
           <div class="btn" v-if="user.manage == 'true'">
             <div class="revocation" v-on:click="revocation" title="删除信息" v-if="pagState != '3'"></div>
 
@@ -225,7 +238,11 @@
             isDetails:false,//是否打开详情界面
             detailsDate:{},//详情信息存放
             rentTime:"",//入住时间
-            endTime:""//入住时间
+            endTime:"",//入住时间
+            timeChassify:{
+              startTime:null,
+              endTime:null
+            }
           }
       },
       methods:{
@@ -269,6 +286,59 @@
         PrintTheContract(){
           this.$store.state.rentInfo = this.detailsDate;
           this.$router.push("/manageMain/contract")
+        },
+        /*
+        * 按时间检索
+        * */
+        tChassify(){
+          this.$http({
+            method:'post',
+            url:'http://localhost:2173/rentMange',
+            data:{
+              step: 8,
+              haolei:this.pagState,
+              startTime:(this.timeChassify.startTime || "false"),
+              endTime:(this.timeChassify.endTime || "false"),
+              linkman_user:this.user.user
+            }
+          }).then((response) =>{
+            if (response.data == '暂无数据') {
+              this.haveData[1] = !this.haveData;
+              this.haveData[2] = !this.haveData;
+              this.haveData[3] = !this.haveData;
+              this.paging.pn = 1;
+              this.paging.maxPn = 1;
+            }else {
+              this.haveData[1] = false
+              this.haveData[2] = false
+              this.haveData[3] = false
+              response.data.reverse()
+              let state1 = [], state2 = [], state3 = [];
+              response.data.forEach((val,index)=>{
+                if (val.bookORcheckin == '1') {
+                  state1.push(val)
+                  this.haveData[1] = true
+                }else if (val.bookORcheckin == '2'){
+                  state2.push(val)
+                  this.haveData[2] = true
+                } else {
+                  state3.push(val)
+                  this.haveData[3] = true
+                }
+              })
+              this.grouping(state3,3)
+              this.grouping(state2,2)
+              this.grouping(state1,1)
+            }
+          })
+        },
+        /*
+        * 清空查询时间
+        * */
+        clearTClassify(){
+          this.timeChassify.startTime = null;
+          this.timeChassify.endTime = null;
+          this.tChassify();
         },
         /*
         * 搜索
@@ -678,7 +748,7 @@
     width: 100%;
     height: 45px;
     line-height: 45px;
-    font-size: 14px;
+    font-size: 16px;
     color: #333;
     text-align: center;
 
@@ -750,7 +820,7 @@
   /*分页样式结束*/
   /*详情界面布局*/
   .details{
-    width: 450px;
+    width: 480px;
     height: 400px;
     position: fixed;
     left: 40%;
@@ -797,12 +867,12 @@
   }
   .detailsContariner>p>span:first-child{
     display: inline-block;
-    width: 110px;
+    width: 120px;
     padding-left: 15px;
   }
   .detailsContariner>p>span:last-child{
     display: inline-block;
-    width: calc(100% - 125px);
+    width: calc(100% - 135px);
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -835,19 +905,20 @@
     border-radius: 3px;
   }
   .stateSelect{
-    height: 36px;
-    width: 175px;
+    height: 45px;
+    width: 180px;
     padding: 2px 6px;
     line-height: 24px;
     border: 1px solid #d7d6d7;
     border-radius: 4px;
     color: #333;
     background: #fff;
+    font-size: 20px;
   }
   #header_title{
      width: 100%;
-     height: 40px;
-     line-height: 40px;
+     height: 60px;
+     line-height: 60px;
      position: relative;
    }
   #header_title .search{
@@ -856,7 +927,7 @@
     z-index: 1;
   }
   .search input{
-    height: 24px;
+    height: 30px;
     width: 175px;
     padding: 2px 6px;
     line-height: 24px;
@@ -906,5 +977,12 @@
     background-color: #eeeeee;
     cursor: pointer;
     text-align: center;
+  }
+  .mClassify{
+    display: inline-block;
+    position: absolute;
+    left: -550px;
+    width: 560px;
+    top: 0;
   }
 </style>

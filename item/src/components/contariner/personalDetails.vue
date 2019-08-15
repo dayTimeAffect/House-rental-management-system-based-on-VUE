@@ -2,54 +2,65 @@
   <div id="personalDetails">
     <div class="personalDetails_main">
       <div class="personalDetails_main_top">
-        <p style="margin: 50px 0px 26px 0px;padding-left: 35px;font-size: 16px;color: #5c5c5c;padding-bottom: 10px;border-bottom: 1px solid #acacac;">基本信息</p>
-        <div class="personalDetails_main_info" style="margin-left: 15px">
-          <p class="infoLine">账号：<span style="padding-left: 15px;color: #3a4585;font-size: 13px">{{user}}</span></p>
+        <p v-if="changePassword.is == false" style="margin: 50px 0px 26px 0px;padding-left: 35px;font-size: 24px;color: #5c5c5c;padding-bottom: 10px;border-bottom: 1px solid #acacac;">基本信息</p>
+        <p v-else style="margin: 50px 0px 26px 0px;padding-left: 35px;font-size: 24px;color: #5c5c5c;padding-bottom: 10px;border-bottom: 1px solid #acacac;">修改密码</p>
+        <div v-if="changePassword.is == false" class="personalDetails_main_info" style="margin-left: 15px">
+          <p class="infoLine">账号：<span style="padding-left: 15px;color: #3a4585;font-size: 16px">{{user}}</span></p>
           <p class="infoLine">姓名：
-            <span style="padding-left: 15px;color: #3a4585;font-size: 13.333px" v-if="!newInfo.isAlter">{{name}}</span>
+            <span style="padding-left: 15px;color: #3a4585;font-size: 16px" v-if="!newInfo.isAlter">{{name}}</span>
             <input type="text" v-model="newInfo.name" class="newInfo" v-else>
           </p>
           <p class="infoLine">性别：
-            <span style="padding-left: 15px;color: #3a4585;font-size: 13.333px" v-if="!newInfo.isAlter">{{sex}}</span>
+            <span style="padding-left: 15px;color: #3a4585;font-size: 16px" v-if="!newInfo.isAlter">{{sex}}</span>
             <input type="text" v-model="newInfo.sex" v-else class="newInfo">
           </p>
           <p class="infoLine">年龄：
-            <span style="padding-left: 15px;color: #3a4585;font-size: 13.333px" v-if="!newInfo.isAlter">{{age}}</span>
+            <span style="padding-left: 15px;color: #3a4585;font-size: 16px" v-if="!newInfo.isAlter">{{age}}</span>
             <input type="text" v-model="newInfo.age" v-else class="newInfo">
           </p>
           <p class="infoLine">电话：
-            <span style="padding-left: 15px;color: #3a4585;font-size: 13.333px" v-if="!newInfo.isAlter">{{phone}}</span>
+            <span style="padding-left: 15px;color: #3a4585;font-size: 16px" v-if="!newInfo.isAlter">{{phone}}</span>
             <input type="text" v-model="newInfo.phone" v-else class="newInfo">
           </p>
           <p class="infoLine">邮箱：
-            <span style="padding-left: 15px;color: #3a4585;font-size: 13.333px" v-if="!newInfo.isAlter">{{email}}</span>
+            <span style="padding-left: 15px;color: #3a4585;font-size: 16px" v-if="!newInfo.isAlter">{{email}}</span>
             <input type="text" v-model="newInfo.email" v-else class="newInfo">
           </p>
+        </div>
+        <div v-else class="personalDetails_main_info" style="margin-left: 15px">
+          <p class="infoLine">账号：<span style="padding-left: 15px;color: #3a4585;font-size: 16px">{{user}}</span></p>
+          <p><span style="width: 150px;display: inline-block">输入新密码: </span><input class="inputSearch" type="text" v-model="changePassword.newPassword"></p>
+          <p><span style="width: 150px;display: inline-block">再次输入密码: </span><input class="inputSearch" type="text" v-model="changePassword.againNewPassword"></p>
         </div>
         <div class="personalDetails_main_img" style="margin-right: 15px">
           <div style="width: 150px;height: 200px;box-shadow: 0px 1px 3px #a3a3a3">
             <img src="" alt="" style="width: 150px;height: 200px;" id="userHeaderImg">
             <img src="../../assets/3.jpg" style="width: 150px;height: 200px;" alt="" v-if="noneImg">
           </div>
-            <!--<p style="text-align: center;padding-top: 10px;font-size: 14px"><span style="color: #338af9;cursor: pointer">修改头像</span></p>-->
         </div>
         <div class="clear"></div>
       </div>
+
       <div class="personalDetails_main_footer">
         <p>
           <span v-on:click="goBack">返回</span>
-          <span v-on:click="alterInfo">
+
+          <span v-on:click="alterInfo" v-if="!changePassword.is">
             <span v-if="!newInfo.isAlter">修改信息</span>
             <span v-else>保存</span>
           </span>
+          <span v-else>&nbsp;</span>
+
+          <span  v-on:click="changePas"  v-if="!newInfo.isAlter">
+            <span v-if="!changePassword.is">修改密码</span>
+            <span v-else>保存</span>
+          </span>
+          <span v-else>&nbsp;</span>
         </p>
       </div>
 
-<!--      <img src="../../assets/2.jpg" alt="" id="portrait" style="width: 300px;height: 300px" />
-      <input type="file" id="saveImage" ref="file" accept="image/*" multiple="multiple" name="f1"/>
-      <button v-on:click="release">提交</button>-->
+
     </div>
-    <!--<img src="" alt="" id="test1">-->
   </div>
 </template>
 
@@ -75,6 +86,11 @@
             age:this.$store.state.user.age,
             phone:this.$store.state.user.phone,
             email:this.$store.state.user.email,
+          },
+          changePassword:{
+            is:false,
+            newPassword:"",
+            againNewPassword:"",
           }
         }
       },
@@ -83,28 +99,6 @@
         release() {
           document.getElementById('test1').src = this.$store.state.img;
           console.log(this.$store.state.img)
-/*          this.fileImg = this.$refs.file.files[0];
-          // this.imgSrc = this.$refs.file.value;
-          let data = new FormData();
-          data.append('file', this.fileImg);
-          this.$http({
-            method: 'post',
-            url: 'http://localhost:2173/release',
-            'Content-Type': 'multipart/form-data',
-            responseType: 'blob',
-            data: data
-          }).then((response) => {
-            // this.img = "../../../../后台/house/temporary"+response.data
-            // console.log(response.data);
-            // document.getElementById('portrait').src = response.data;
-            let url = URL.createObjectURL(response.data)
-            console.log(url);
-
-            document.getElementById('test1').src = url
-            // this.text("../../../../后台/house/temporary/"+response.data)
-            // document.getElementById('test1').src = "../../../../后台/house/temporary/"+response.data;
-
-          })*/
         },
         /*
         * 动态显示上传的图片
@@ -132,7 +126,10 @@
             this.age=this.$store.state.user.age;
             this.phone=this.$store.state.user.phone;
             this.email=this.$store.state.user.email;
-          }else if (this.newInfo.isAlter == false) {
+          }else if (this.changePassword.is == true){
+            this.changePassword.is = false
+          }
+          else if (this.newInfo.isAlter == false) {
             this.$router.go(-1);
           }
         },
@@ -152,7 +149,8 @@
                 phone:this.newInfo.phone,
                 email:this.newInfo.email,
                 manage:this.$store.state.user.manage,
-                user:this.user
+                user:this.user,
+                step:1
               }
             }).then((response)=>{
               if (response.data == '修改成功') {
@@ -181,6 +179,45 @@
 
           }
         },
+        /*
+        * 修改密码
+        * */
+        changePas(){
+          this.changePassword.is = !this.changePassword.is
+          if (this.changePassword.is == false) {
+            if (!this.changePassword.newPassword){
+              alert("请输入正确的密码");
+              this.changePassword.is = true;
+              return;
+            }
+            if (this.changePassword.newPassword != this.changePassword.againNewPassword){
+              alert("新密码再次输入错误");
+              this.changePassword.is = true;
+              this.changePassword.againNewPassword = "";
+              return;
+            }
+            this.$http({
+              method: 'post',
+              url: 'http://localhost:2173/changeInfo',
+              data:{
+                password:this.changePassword.newPassword,
+                user:this.user,
+                manage:this.$store.state.user.manage,
+                step:2
+              }
+            }).then((response)=>{
+              if (response.data == '修改成功') {
+                alert("修改成功")
+
+              }else {
+                alert("修改失败")
+              }
+              this.changePassword.newPassword = "";
+              this.changePassword.againNewPassword = "";
+
+            })
+          }
+        }
       },
       created(){
         if (String(this.$store.state.user.path) != 'null' && String(this.$store.state.user.path) != 'undefined') {
@@ -221,9 +258,9 @@
     height: 500px;
   }
   .personalDetails_main_info>p{
-    font-size: 14px;
+    font-size: 17px;
     margin: 25px 0;
-    width: 300px;
+    width: 400px;
   }
   .personalDetails_main_img{
     float: right;
@@ -254,5 +291,15 @@
     margin-left: 14px;
     border: 1px solid #999;
     color: rgb(58, 69, 133);
+  }
+  .inputSearch{
+    height: 24px;
+    width: 175px;
+    padding: 2px 6px;
+    line-height: 24px;
+    border: 1px solid #d7d6d7;
+    border-radius: 4px;
+    color: #555;
+    background: #fff;
   }
 </style>

@@ -66,7 +66,7 @@ export default {
     overflow:hidden;
     color: #333;
     /*background: #fff;*/
-    font-family:'微软雅黑','黑体',serif,'宋体';color:#4d6287;font-size:12px;
+    font-family:'微软雅黑','黑体',serif,'宋体';color:#4d6287;font-size:13px;
 
   }
   #app{

@@ -100,7 +100,7 @@ export default {
     cursor: pointer;
   }
   .left>li:first-child{
-    font-size: 18px;
+    font-size: 20px;
   }
   .userInterface{
     margin-left: 20px;
@@ -121,7 +121,7 @@ export default {
     box-shadow: 0 2px 10px 0 rgba(0,0,0,.12);
     z-index: 1000;
     text-align: center;
-    font-size: 14px;
+    font-size: 15px;
   }
   .user-operations>div{
     height: 60px;

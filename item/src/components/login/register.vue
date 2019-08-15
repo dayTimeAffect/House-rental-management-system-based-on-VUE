@@ -144,21 +144,27 @@
             switch (true) {
               case !this.user:
                 alert('账号不能为空');
+                return
                 break;
               case !this.password:
                 alert('密码不能为空');
+                return
                 break;
               case !this.againPassword:
                 alert('请再次输入密码');
+                return
                 break;
               case !this.name:
                 alert('姓名不能为空');
+                return
                 break;
               case !this.email:
                 alert('邮箱不能为空');
+                return
                 break;
               case !this.phone:
                 alert('电话不能为空');
+                return
                 break;
               default:
                 kong = true;
@@ -168,21 +174,26 @@
               if (this.password != this.againPassword){
                 this.againPassword = "";
                 alert('两次密码输入不匹配');
+                return
               }
             }
           } else if (this.manage == false) {
             switch (true) {
               case !this.user:
                 alert('账号不能为空');
+                return;
                 break;
               case !this.password:
                 alert('密码不能为空');
+                return
                 break;
               case !this.againPassword:
                 alert('请再次输入密码');
+                return
                 break;
               case !this.name:
                 alert('姓名不能为空');
+                return
                 break;
               default:
                 kong = true;
@@ -192,6 +203,7 @@
               if (this.password != this.againPassword){
                 this.againPassword = "";
                 alert('两次密码输入不匹配');
+                return
               }
             }
           }

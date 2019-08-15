@@ -1,7 +1,4 @@
-
 var mysql = require('mysql');
-
-
 exports.switchoverRentState = function (require,response,next) {
     var poll = mysql.createPool({
         host:'localhost', //链接地址
@@ -36,5 +33,4 @@ exports.switchoverRentState = function (require,response,next) {
 
         }
     })
-
 }

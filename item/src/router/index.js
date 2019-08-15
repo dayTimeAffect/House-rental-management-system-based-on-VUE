@@ -10,7 +10,8 @@ import contract from './../components/contariner/contract'
 import examine from './../components/contariner/examine'
 import rentSituation from './../components/contariner/rentSituation'
 import personalDetails from '../components/contariner/personalDetails'
-
+import superAdmin from  '../components/manageMain/superAdmin'
+import superAdminMain from  '../components/contariner/superAdminMain'
 
 Vue.use(Router)
 
@@ -73,20 +74,36 @@ const router = new Router({
         },
       ]
     },
-
+    {
+      name:superAdmin,
+      path:'/superAdmin',
+      component:superAdmin,
+    },
+    {
+      name:superAdminMain,
+      path:'/superAdminMain',
+      component:superAdminMain,
+    }
 
   ]
 })
 
 router.beforeEach((to,from,next)=>{
-  if(window.sessionStorage.id > 0){
+  if (to.path == '/superAdmin'){
+    next()
+  }
+  else if (window.sessionStorage.id > 0){
     next()
   }else {
     if(to.path == '/login' || to.path == '/login/register' || to.path == '/login/login'){
       next()
     }else {
       alert('还未登录或登录已失效，请重新登录')
-      next('/login')
+      if (to.path == '/superAdminMain') {
+        next('/superAdmin')
+      }else{
+        next('/login')
+      }
     }
   }
 

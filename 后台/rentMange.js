@@ -27,7 +27,8 @@ exports.rentMange = function (require,response,next) {
 
                     }
                 })
-            }else if (require.body.step == '2'){
+            }
+            else if (require.body.step == '2'){
                 let state = {
                     1:false,
                     2:false
@@ -67,7 +68,8 @@ exports.rentMange = function (require,response,next) {
                 })
 
 
-            }else if (require.body.step == '0') {
+            }
+            else if (require.body.step == '0') {
                 connection.query("SELECT * FROM `bookhouse` LEFT JOIN `house` ON bookhouse.houseId = house.id WHERE bookhouse.linkman_user = '" + require.body.user + "'", function (err, data) {
                     if (err) {
                         console.log(err);
@@ -174,6 +176,37 @@ exports.rentMange = function (require,response,next) {
                     sql = "SELECT * FROM `bookhouse` LEFT JOIN `house` ON bookhouse.houseId = house.id WHERE house.rentType like '%" + require.body.rentType + "%' AND bookhouse.renter_user = '"+require.body.renter_user+"'";
 
                 }
+                console.log(sql);
+                connection.query(sql, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        if (data.length > 0) {
+                            response.send(data);
+                            connection.end(); //断开链接
+                        } else {
+                            response.send('暂无数据');
+                            connection.end(); //断开链接
+                        }
+
+                    }
+                })
+            }
+            else if (require.body.step == '8'){
+                let sql;
+                let haolei = {
+                    1:"bookTime",
+                    2:"bookTime",
+                    3:"rentTime",
+                }
+                sql = "SELECT * FROM `bookhouse` LEFT JOIN `house` ON bookhouse.houseId = house.id WHERE "
+                if (require.body.startTime != "false"){
+                    sql += "bookhouse."+haolei[require.body.haolei]+" >= '" + require.body.startTime + "-01' AND "
+                }
+                if (require.body.endTime != "false") {
+                    sql += "bookhouse."+haolei[require.body.haolei]+" <= '" + require.body.endTime + "-01' AND "
+                }
+                sql +=  "bookhouse.linkman_user = '" + require.body.linkman_user + "'"
                 console.log(sql);
                 connection.query(sql, function (err, data) {
                     if (err) {

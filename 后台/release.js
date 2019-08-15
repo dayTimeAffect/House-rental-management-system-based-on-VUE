@@ -1,6 +1,4 @@
 var mysql = require('mysql');
-
-
 exports.release = function (require,response,next) {
 
     var poll = mysql.createPool({
@@ -10,7 +8,6 @@ exports.release = function (require,response,next) {
         'password':'123456', //密码
         'database':'house_rent', //库名
     })
-
     poll.getConnection(function (err,connection) {
         if (err) console.log(err);
         else {
@@ -31,6 +28,4 @@ exports.release = function (require,response,next) {
             })
         }
     })
-
-
 }

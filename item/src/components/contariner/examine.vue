@@ -26,8 +26,6 @@
             </span>
             <span class="search2">
               面积：
-              <!--<span v-on:click="search"><i class="fa fa-search"></i></span>-->
-              <!--<input type="text" placeholder="根据出租面积检索" ref="search_input3" v-on:blur="search" v-on:keyup.enter="search">-->
               <select name="" id="searchHouseArea" ref="search_input3" v-on:blur="search" v-on:keyup.enter="search">
                 <option value="false" selected>全部</option>
                 <option value="1">10m²</option>
@@ -132,9 +130,6 @@
           <p><span>发布人电话：</span><span>{{detailsDate.linkman_phone}}</span></p>
           <p><span>发布时间：</span><span>{{timeDispose(detailsDate.publish_time)}}</span></p>
           <p><span>备注：</span><span>{{detailsDate.remark}}</span></p>
-
-
-
         </div>
         <div class="detailsFooter">
           <p class="detailsBtn">
@@ -870,8 +865,8 @@
 }
 .header_title{
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 60px;
+  line-height: 60px;
   position: relative;
 }
 .header_title .search{
@@ -880,14 +875,15 @@
   z-index: 1;
 }
 #occupancy{
-  height: 36px;
-  width: 175px;
+  height: 45px;
+  width: 180px;
   padding: 2px 6px;
   line-height: 24px;
   border: 1px solid #d7d6d7;
   border-radius: 4px;
   color: #333;
   background: #fff;
+  font-size: 20px;
 }
 .search1{
   position: absolute;
@@ -909,7 +905,7 @@
 .search1>input,
 .search2>select,
 .search3>select{
-  height: 24px;
+  height: 30px;
   width: 175px;
   padding: 2px 6px;
   line-height: 24px;
@@ -1015,7 +1011,7 @@ td{
   width: 100%;
   height: 45px;
   line-height: 45px;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   text-align: center;
 

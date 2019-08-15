@@ -79,7 +79,7 @@
               }
             }).then( (response) => {
               if (response.data == '登录失败'){
-                alert('账号或密码错误！')
+                alert('账号或密码错误！');
                 this.password = "";
               } else {
                 if (response.data.manage == true || response.data.manage == 'true'){
@@ -108,7 +108,7 @@
     width: 200px;
     height: 100px;
     text-align: center;
-    font-size: 30px;
+    font-size: 40px;
     font-weight: 600;
     color: #333;
     line-height: 100px;
@@ -129,7 +129,7 @@
   ul li{font-size: 30px;color:#2ec0f6;}
   .tyg-div{z-index:-1000;float:left;position:absolute;left:5%;top:20%;}
   .tyg-p{
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'microsoft yahei';
     position: absolute;
     top: 135px;
@@ -174,7 +174,7 @@
       0 15px 30px 0 rgba(255,255,255,.25) inset,
       0 2px 7px 0 rgba(0,0,0,.2);
     font-family: 'PT Sans', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0,0,0,.1);

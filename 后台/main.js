@@ -12,6 +12,9 @@ var changeInfo = require('./changeInfo') // 个人信息修改接口模块
 var bookHouse = require('./bookHouse') // 预订房屋接口
 var switchoverRentState = require('./switchoverRentState') // 切换房屋状态接口
 var rentMange = require('./rentMange') // 租赁管理接口
+var superAdmin = require('./superAdmin') // 超级管理接口
+var superQuery = require('./superQuery') // 超级管理查询接口
+var remove = require('./remove') // 超级管理删除接口
 /*
 * 监听接口
 * */
@@ -95,4 +98,20 @@ server.post('/switchoverRentState',function (require,response,next) {
 * */
 server.post('/rentMange',function (require,response,next) {
     rentMange.rentMange(require,response,next)
+})
+/*
+* 超级管理
+* */
+server.post('/superAdmin',function (require,response,next) {
+    superAdmin.superAdmin(require,response,next)
+})/*
+* 超级管理查询
+* */
+server.post('/superQuery',function (require,response,next) {
+    superQuery.superQuery(require,response,next)
+})/*
+* 超级管理删除
+* */
+server.post('/remove',function (require,response,next) {
+    remove.remove(require,response,next)
 })

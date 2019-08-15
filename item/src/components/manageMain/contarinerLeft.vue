@@ -33,7 +33,7 @@
   }
   .tree{
     background-color: #ccc;
-    font-size: 14px;
+    font-size: 20px;
   }
   .tree_node{
     cursor: pointer;

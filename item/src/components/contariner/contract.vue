@@ -253,6 +253,7 @@
 </template>
 
 <script>
+  import {XDoc} from '../../../static/xdoc'
   export default {
     name: "contract",
     data(){
